@@ -1,0 +1,98 @@
+                  /* Quick interactive demo running servo with Timer 1 */
+
+// ------- Preamble -------- //
+#include <avr/io.h>
+#include <util/delay.h>
+#include <avr/interrupt.h>
+
+#include "pinDefines.h"
+#include "USART.h"
+
+#define PULSE_MIN         700         /* experiment with these values */
+#define PULSE_MAX         2300              /* to match your own servo */
+#define PULSE_MID         PULSE_MIN + (PULSE_MAX - PULSE_MIN) / 2
+
+// static inline uint16_t getNumber16(void);
+static inline void initADC0(void) {
+    ADMUX |= (1 << REFS0);
+    ADCSRA |= (1 << ADPS1) | (1 << ADPS0);
+    ADCSRA |= (1 << ADEN);
+}
+
+static inline void initTimer1Servo(void) {
+                   /* Set up Timer1 (16bit) to give a pulse every 20ms */
+                             /* Use Fast PWM mode, counter max in ICR1 */
+  TCCR1A |= (1 << WGM11);
+  TCCR1B |= (1 << WGM12) | (1 << WGM13);
+  TCCR1B |= (1 << CS10);  /* /1 prescaling -- counting in microseconds */
+  ICR1 = 20000;                                    /* TOP value = 20ms */
+  TCCR1A |= (1 << COM1A1);              /* Direct output on PB1 / OC1A */
+  DDRB |= (1 << PB1);                            /* set pin for output */
+}
+
+static inline void showOff(void) {
+  printString("Center\r\n");
+  OCR1A = PULSE_MID;
+  _delay_ms(1500);
+  printString("Clockwise Max\r\n");
+  OCR1A = PULSE_MIN;
+  _delay_ms(1500);
+  printString("Counterclockwise Max\r\n");
+  OCR1A = PULSE_MAX;
+  _delay_ms(1500);
+  printString("Center\r\n");
+  OCR1A = PULSE_MID;
+  _delay_ms(1500);
+}
+
+static inline uint16_t getADC(void) {
+  // Read in ADC Value
+  unsigned int adcValue;
+  ADCSRA |= (1 << ADSC);
+  loop_until_bit_is_clear(ADCSRA, ADSC);
+
+  adcValue = ADC;
+  adcValue = adcValue >> 2;
+  printWord(adcValue);
+  _delay_ms(1500);
+  printString("\n");
+  _delay_ms(1500);
+  return adcValue;
+}
+
+static inline uint16_t adc_ticks(uint16_t adcValue) {
+  if(adcValue == 0){
+    return PULSE_MIN;
+  }
+  else if(adcValue == 255){
+    return PULSE_MAX;
+  }
+  else{
+    return PULSE_MIN + adcValue * ((PULSE_MAX - PULSE_MIN) / 256);
+  }
+}
+
+int main(void) {
+
+  // -------- Inits --------- //
+  uint16_t servoPulseLength;
+  OCR1A = PULSE_MID;            /* set it to middle position initially */
+  initADC0();
+  initTimer1Servo();
+  initUSART();
+  printString("\r\nWelcome to the Servo Demo\r\n");
+  _delay_ms(1500);
+  showOff();
+
+  // ------ Event loop ------ //
+  while (1) {
+    
+    unsigned int adcValue;
+    adcValue = getADC();
+	servoPulseLength = adc_ticks(adcValue);
+    OCR1A = servoPulseLength;
+
+  }                                                  /* End event loop */
+  return 0;                            /* This line is never reached */
+}
+
