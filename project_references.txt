@@ -13,6 +13,7 @@ https://github.com/tinyfpga/TinyFPGA-BX
 https://www.tindie.com/products/loglow/tinyfpga-bx-breakout-revision-a/
 https://github.com/tinyfpga/TinyFPGA-Bootloader/issues/28
 https://wiki.archlinux.org/index.php/Python/Virtual_environment
+https://www.fpga4fun.com/SPI2.html
 
 NodeMCU
 https://circuits4you.com/2017/12/31/nodemcu-pinout/
