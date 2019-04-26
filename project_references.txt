@@ -1,0 +1,27 @@
+Project References
+
+In this document are the links to websites referenced while working with the various development boards in this project.
+
+Arduino
+https://store.arduino.cc/usa/arduino-nano
+https://www.youtube.com/watch?v=uIdEdCDBU-E
+https://www.arduino.cc/en/Tutorial/HelloWorld
+
+TinyFPGA Bx
+https://tinyfpga.com/bx/guide.html
+https://github.com/tinyfpga/TinyFPGA-BX
+https://www.tindie.com/products/loglow/tinyfpga-bx-breakout-revision-a/
+https://github.com/tinyfpga/TinyFPGA-Bootloader/issues/28
+https://wiki.archlinux.org/index.php/Python/Virtual_environment
+
+NodeMCU
+https://circuits4you.com/2017/12/31/nodemcu-pinout/
+https://docs.platformio.org/en/latest/quickstart.html#setting-up-the-project
+https://docs.platformio.org/en/latest/ide/clion.html
+
+Trynkit
+https://github.com/hexagon5un/AVR-Programming
+
+PSoC
+http://www.robogrok.com/Robotics_1.php
+
